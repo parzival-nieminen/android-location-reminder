@@ -8,4 +8,7 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="FirebaseAuthTheme" parent="FirebaseUI">
+        <item name="android:windowBackground">@drawable/ic_login_background</item>
+    </style>
 </resources>
