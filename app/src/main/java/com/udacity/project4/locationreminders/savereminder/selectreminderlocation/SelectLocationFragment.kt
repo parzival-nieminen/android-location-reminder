@@ -1,14 +1,9 @@
 package com.udacity.project4.locationreminders.savereminder.selectreminderlocation
 
-
-import android.Manifest
 import android.annotation.SuppressLint
-import android.content.pm.PackageManager
 import android.content.res.Resources
 import android.os.Bundle
 import android.view.*
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -21,6 +16,7 @@ import com.google.android.gms.maps.model.*
 import com.udacity.project4.R
 import com.udacity.project4.base.BaseFragment
 import com.udacity.project4.databinding.FragmentSelectLocationBinding
+import com.udacity.project4.locationreminders.permission.PermissionProvider
 import com.udacity.project4.locationreminders.savereminder.SaveReminderViewModel
 import com.udacity.project4.utils.setDisplayHomeAsUpEnabled
 import org.koin.android.ext.android.inject
@@ -33,9 +29,9 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
     private lateinit var map: GoogleMap
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private var poiMarker: Marker? = null
+    private lateinit var permissionProvider: PermissionProvider
 
     companion object {
-        private const val REQUEST_LOCATION_PERMISSION = 1
         private const val DEFAULT_ZOOM = 15f
     }
 
@@ -67,12 +63,9 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
 
     override fun onStart() {
         super.onStart()
-        if (!isPermissionGranted()) {
-            ActivityCompat.requestPermissions(
-                requireActivity(),
-                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                REQUEST_LOCATION_PERMISSION
-            )
+        permissionProvider = PermissionProvider(requireContext())
+        if (permissionProvider.fineLocation.hasPermission().not()) {
+            permissionProvider.fineLocation.requestPermission(::requestPermissions)
         }
     }
 
@@ -112,10 +105,8 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
         permissions: Array<out String>,
         grantResults: IntArray
     ) {
-        if (requestCode == REQUEST_LOCATION_PERMISSION) {
-            if (grantResults.isNotEmpty() && (grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                enableMyLocation(map)
-            }
+        if (permissionProvider.fineLocation.isApproved(requestCode, permissions, grantResults)) {
+            enableMyLocation(map)
         }
     }
 
@@ -125,7 +116,7 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
 
     private fun getDeviceLocation() {
         try {
-            if (isPermissionGranted()) {
+            if (permissionProvider.fineLocation.hasPermission()) {
                 val locationResult = fusedLocationProviderClient.lastLocation
                 locationResult.addOnSuccessListener { location ->
                     location?.let {
@@ -143,24 +134,13 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
         }
     }
 
-    private fun isPermissionGranted(): Boolean {
-        return ContextCompat.checkSelfPermission(
-            requireContext(),
-            Manifest.permission.ACCESS_FINE_LOCATION
-        ) === PackageManager.PERMISSION_GRANTED
-    }
-
     @SuppressLint("MissingPermission")
     private fun enableMyLocation(map: GoogleMap) {
-        if (isPermissionGranted()) {
+        if (permissionProvider.fineLocation.hasPermission()) {
             getDeviceLocation()
             map.isMyLocationEnabled = true
         } else {
-            ActivityCompat.requestPermissions(
-                requireActivity(),
-                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                REQUEST_LOCATION_PERMISSION
-            )
+            permissionProvider.fineLocation.requestPermission(::requestPermissions)
         }
     }
 
