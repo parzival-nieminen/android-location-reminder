@@ -32,10 +32,10 @@ android {
         returnDefaultValues = true
     }
 
-    //dataBinding {
-    //    enabled = true
-    //    enabledForTests = true
-    //}
+    lintOptions {
+        abortOnError false
+    }
+
     buildFeatures {
         dataBinding true
     }
