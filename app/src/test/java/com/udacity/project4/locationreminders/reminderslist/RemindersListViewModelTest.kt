@@ -8,6 +8,7 @@ import com.udacity.project4.locationreminders.data.FakeDataSource
 import com.udacity.project4.locationreminders.data.dto.ReminderDTO
 import com.udacity.project4.locationreminders.getOrAwaitValue
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runBlockingTest
@@ -23,9 +24,10 @@ import org.robolectric.annotation.Config
 
 @RunWith(AndroidJUnit4::class)
 @Config(sdk = [Build.VERSION_CODES.O_MR1])
+@ExperimentalCoroutinesApi
 class RemindersListViewModelTest {
 
-    private val testDispatcher : TestCoroutineDispatcher = TestCoroutineDispatcher()
+    private val testDispatcher: TestCoroutineDispatcher = TestCoroutineDispatcher()
     private val fakeDb = FakeDataSource()
     private lateinit var remindersListViewModel: RemindersListViewModel
 
