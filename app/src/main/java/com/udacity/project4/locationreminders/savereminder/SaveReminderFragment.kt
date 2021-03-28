@@ -76,8 +76,13 @@ class SaveReminderFragment : BaseFragment() {
                 _viewModel.longitude.value
             )
             _viewModel.validateAndSaveReminder(reminderData)
-            checkGeoPermissions(reminderData = reminderData)
-            _viewModel.onClear()
+            _viewModel.isValid.value.let {
+                if (it == true) {
+                    checkGeoPermissions(reminderData = reminderData)
+                    _viewModel.onClear()
+                }
+            }
+
         }
     }
 
