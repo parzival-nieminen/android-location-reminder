@@ -56,6 +56,9 @@ Android CI runs's now with unit tests, click on the ci image:
         
 ```
 
+## App Screen's 
+![alt text](media/screens.png "Load App Screen 1")
+
 ## Project Instructions
     1. Create a Login screen to ask users to login using an email address or a Google account.  Upon successful login, navigate the user to the Reminders screen.   If there is no account, the app should navigate to a Register screen.
     2. Create a Register screen to allow a user to register using an email address or a Google account.
