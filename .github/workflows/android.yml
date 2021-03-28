@@ -16,7 +16,11 @@ jobs:
     - name: set up JDK 1.8
       uses: actions/setup-java@v1
       with:
-        java-version: 1.8
+        java-version: 1.8    
+    - name: Decode google-services.json
+      env:
+        GOOGLE_SERVICES: ${{ secrets.GOOGLE_SERVICES }}
+      run: echo $GOOGLE_SERVICES > app/google-services.json    
     - name: get gradel wrapper first
       run: gradle wrapper --gradle-version 6.5
     - name: Grant execute permission for gradlew
