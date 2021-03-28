@@ -57,7 +57,7 @@ class RemindersListViewModelTest {
     }
 
     @Test
-    fun no_reminder_found_when_list_is_empty() = runBlockingTest {
+    fun when_no_reminder_found_then_list_is_empty() = runBlockingTest {
         remindersListViewModel.loadReminders()
 
         assertThat(remindersListViewModel.remindersList.getOrAwaitValue().size).isEqualTo(0)
@@ -66,7 +66,7 @@ class RemindersListViewModelTest {
     }
 
     @Test
-    fun one_reminder_found_when_list_has_one_entry() = runBlockingTest {
+    fun when_one_reminder_found_then_list_has_one_entry() = runBlockingTest {
         fakeDb.saveReminder(ReminderDTO(null, null, null, null, null))
         remindersListViewModel.loadReminders()
 
@@ -76,7 +76,7 @@ class RemindersListViewModelTest {
     }
 
     @Test
-    fun shows_loading_state_is_true_when_load_task_is_running() = runBlockingTest {
+    fun when_shows_loading_state_is_true_then_load_task_is_running() = runBlockingTest {
         testDispatcher.pauseDispatcher()
         remindersListViewModel.loadReminders()
 

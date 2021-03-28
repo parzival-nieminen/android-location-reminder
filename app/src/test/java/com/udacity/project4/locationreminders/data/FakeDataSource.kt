@@ -20,7 +20,7 @@ class FakeDataSource : ReminderDataSource {
 
     override suspend fun getReminder(id: String): Result<ReminderDTO> {
         val reminder = remindersServiceData.firstOrNull { it.id == id }
-            ?: return Result.Error("404 Not Found")
+            ?: return Result.Error("Error: Not Found")
         return Result.Success(reminder)
     }
 
