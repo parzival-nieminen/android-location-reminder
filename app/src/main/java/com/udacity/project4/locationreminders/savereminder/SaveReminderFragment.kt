@@ -33,21 +33,15 @@ class SaveReminderFragment : BaseFragment() {
     private lateinit var geoClient: GeofencingClient
     private lateinit var permissionProvider: PermissionProvider
 
-    private val geofencePendingIntent: PendingIntent by lazy {
+    private val geoPendingIntent: PendingIntent by lazy {
         val intent = Intent(requireContext(), GeofenceBroadcastReceiver::class.java)
-        intent.action = ACTION_GEOFENCE_EVENT
+        intent.action = ACTION_GEO_LOCATION_ENTER
         PendingIntent.getBroadcast(requireContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
-    }
-
-    companion object {
-        internal const val ACTION_GEOFENCE_EVENT =
-            "SaveReminderFragment.ACTION_GEOFENCE_EVENT"
     }
 
     override fun onStart() {
         super.onStart()
         permissionProvider = PermissionProvider(requireContext())
-        geoClient = LocationServices.getGeofencingClient(requireContext())
         checkGeoPermissions()
     }
 
@@ -59,17 +53,16 @@ class SaveReminderFragment : BaseFragment() {
             DataBindingUtil.inflate(inflater, R.layout.fragment_save_reminder, container, false)
 
         setDisplayHomeAsUpEnabled(true)
-
+        binding.lifecycleOwner = this
+        geoClient = LocationServices.getGeofencingClient(requireContext())
         binding.viewModel = _viewModel
-
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.lifecycleOwner = this
+
         binding.selectLocation.setOnClickListener {
-            //            Navigate to another fragment to get the user location
             _viewModel.navigationCommand.value =
                 NavigationCommand.To(SaveReminderFragmentDirections.actionSaveReminderFragmentToSelectLocationFragment())
         }
@@ -84,6 +77,7 @@ class SaveReminderFragment : BaseFragment() {
             )
             _viewModel.validateAndSaveReminder(reminderData)
             checkGeoPermissions(reminderData = reminderData)
+            _viewModel.onClear()
         }
     }
 
@@ -108,7 +102,7 @@ class SaveReminderFragment : BaseFragment() {
                 R.string.permission_denied_explanation, Snackbar.LENGTH_INDEFINITE
             )
                 .setAction(R.string.settings) {
-                    // Displays App settings screen.
+                    //check app settings
                     startActivity(Intent().apply {
                         action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
                         data = Uri.fromParts("package", BuildConfig.APPLICATION_ID, null)
@@ -171,8 +165,10 @@ class SaveReminderFragment : BaseFragment() {
                         0,
                         null
                     )
-                } catch (sendEx: IntentSender.SendIntentException) {
-                    Timber.d("Error: %s", sendEx.message)
+                } catch (error: IntentSender.SendIntentException) {
+                    error.message?.let {
+                        Timber.d("Error: $it")
+                    }
                 }
             } else {
                 Snackbar.make(
@@ -195,7 +191,7 @@ class SaveReminderFragment : BaseFragment() {
 
     @SuppressLint("MissingPermission")
     private fun addGeoTracking(reminderData: ReminderDataItem) {
-        val geofence = Geofence.Builder()
+        val geoLocation = Geofence.Builder()
             .setRequestId(reminderData.id)
             .setCircularRegion(
                 reminderData.latitude!!,
@@ -208,22 +204,27 @@ class SaveReminderFragment : BaseFragment() {
 
         val request = GeofencingRequest.Builder()
             .setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER)
-            .addGeofence(geofence)
+            .addGeofence(geoLocation)
             .build()
-
-        geoClient.addGeofences(request, geofencePendingIntent)?.run {
-            addOnSuccessListener {
-                Timber.d("Added geofence for reminder with id ${reminderData.id}.")
-            }
-
-            addOnFailureListener {
-                _viewModel.showErrorMessage.value = getString(R.string.error_adding_geofence)
-                if ((it.message != null)) {
-                    Timber.w(it.message!!)
+        //remove pending or active geo intent first
+        geoClient.removeGeofences(geoPendingIntent)?.run {
+            addOnCompleteListener {
+                geoClient.addGeofences(request, geoPendingIntent)?.run {
+                    addOnSuccessListener {
+                        Timber.i("Added geo location: ${reminderData.title}")
+                    }
+                    addOnFailureListener {
+                        _viewModel.showErrorMessage.value =
+                            getString(R.string.error_adding_geofence)
+                        it.message?.let { msg ->
+                            Timber.e("error: $msg")
+                        }
+                    }
                 }
             }
         }
     }
 }
 
+const val ACTION_GEO_LOCATION_ENTER = "ACTION_GEO_LOCATION_ENTER"
 private const val REQUEST_TURN_DEVICE_LOCATION_ON = 29

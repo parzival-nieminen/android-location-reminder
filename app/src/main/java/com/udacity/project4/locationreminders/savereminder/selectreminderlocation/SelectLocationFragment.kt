@@ -129,8 +129,10 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
                     }
                 }
             }
-        } catch (exception: SecurityException) {
-            Timber.e("Exception: %s", exception.message)
+        } catch (error: SecurityException) {
+            error.message?.let {
+                Timber.e("Error: $it")
+            }
         }
     }
 
@@ -153,7 +155,9 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
                 )
             )
         } catch (error: Resources.NotFoundException) {
-            Timber.e("Can't find style. Error: ", error)
+            error.message?.let {
+                Timber.e("Error Style: $it")
+            }
         }
     }
 

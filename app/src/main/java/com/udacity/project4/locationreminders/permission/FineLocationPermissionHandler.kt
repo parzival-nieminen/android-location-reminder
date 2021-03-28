@@ -5,7 +5,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import androidx.core.app.ActivityCompat
 
-class FineLocationPermissionHandler(private val ctx: Context) : PermissionHandler {
+class FineLocationPermissionHandler(private val context: Context) : PermissionHandler {
     override val requestCode: Int
         get() = 42
     override val permissionName: String
@@ -13,7 +13,7 @@ class FineLocationPermissionHandler(private val ctx: Context) : PermissionHandle
 
     override fun hasPermission(): Boolean {
         return ActivityCompat.checkSelfPermission(
-            ctx,
+            context,
             permissionName
         ) == PackageManager.PERMISSION_GRANTED
     }

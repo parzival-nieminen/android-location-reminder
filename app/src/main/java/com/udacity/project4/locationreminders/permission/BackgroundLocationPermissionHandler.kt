@@ -7,7 +7,7 @@ import android.content.pm.PackageManager
 import androidx.core.app.ActivityCompat
 
 @TargetApi(29)
-class BackgroundLocationPermissionHandler(private val ctx: Context) : PermissionHandler {
+class BackgroundLocationPermissionHandler(private val context: Context) : PermissionHandler {
 
     private val runningQOrLater =
         android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q
@@ -22,7 +22,7 @@ class BackgroundLocationPermissionHandler(private val ctx: Context) : Permission
     override fun hasPermission(): Boolean {
         return if (runningQOrLater) {
             ActivityCompat.checkSelfPermission(
-                ctx, permissionName
+                context, permissionName
             ) == PackageManager.PERMISSION_GRANTED
         } else {
             true

@@ -2,12 +2,12 @@ package com.udacity.project4.locationreminders.permission
 
 import android.content.Context
 
-class PermissionProvider(ctx: Context) {
+class PermissionProvider(context: Context) {
 
     var backgroundLocation: PermissionHandler =
-        BackgroundLocationPermissionHandler(ctx)
+        BackgroundLocationPermissionHandler(context)
     var fineLocation: PermissionHandler =
-        FineLocationPermissionHandler(ctx)
+        FineLocationPermissionHandler(context)
 
     fun hasPermissions(): Boolean {
         return backgroundLocation.hasPermission() && fineLocation.hasPermission()
