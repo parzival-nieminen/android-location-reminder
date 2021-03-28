@@ -1,3 +1,5 @@
+[![Android CI](https://github.com/parzival-nieminen/android-location-reminder/actions/workflows/android.yml/badge.svg)](https://github.com/parzival-nieminen/android-location-reminder/actions/workflows/android.yml)
+
 # Location Reminder
 Project for: Android Kotlin Developer Nanodegree Program - nd940 - project 4.
 
