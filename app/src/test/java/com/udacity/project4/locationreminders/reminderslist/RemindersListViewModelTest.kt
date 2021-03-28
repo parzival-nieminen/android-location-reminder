@@ -47,6 +47,14 @@ class RemindersListViewModelTest {
     }
 
     @Test
+    fun when_create_render_list_view_model_then_return_not_null() {
+        val testee = RemindersListViewModel(ApplicationProvider.getApplicationContext(), fakeDb)
+
+        assertThat(testee).isNotNull
+        assertThat(testee).isInstanceOf(RemindersListViewModel::class.java)
+    }
+
+    @Test
     fun no_reminder_found_when_list_is_empty() = runBlockingTest {
         remindersListViewModel.loadReminders()
 
