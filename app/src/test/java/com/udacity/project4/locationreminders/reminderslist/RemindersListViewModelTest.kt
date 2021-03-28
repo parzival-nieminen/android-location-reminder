@@ -61,8 +61,8 @@ class RemindersListViewModelTest {
         remindersListViewModel.loadReminders()
 
         assertThat(remindersListViewModel.remindersList.getOrAwaitValue().size).isEqualTo(0)
-        assertThat(remindersListViewModel.showNoData.getOrAwaitValue()).isTrue()
-        assertThat(remindersListViewModel.showLoading.getOrAwaitValue()).isFalse()
+        assertThat(remindersListViewModel.showNoData.getOrAwaitValue()).isTrue
+        assertThat(remindersListViewModel.showLoading.getOrAwaitValue()).isFalse
     }
 
     @Test
@@ -71,8 +71,8 @@ class RemindersListViewModelTest {
         remindersListViewModel.loadReminders()
 
         assertThat(remindersListViewModel.remindersList.getOrAwaitValue().size).isEqualTo(1)
-        assertThat(remindersListViewModel.showNoData.getOrAwaitValue()).isFalse()
-        assertThat(remindersListViewModel.showLoading.getOrAwaitValue()).isFalse()
+        assertThat(remindersListViewModel.showNoData.getOrAwaitValue()).isFalse
+        assertThat(remindersListViewModel.showLoading.getOrAwaitValue()).isFalse
     }
 
     @Test
@@ -80,6 +80,6 @@ class RemindersListViewModelTest {
         testDispatcher.pauseDispatcher()
         remindersListViewModel.loadReminders()
 
-        assertThat(remindersListViewModel.showLoading.getOrAwaitValue()).isTrue()
+        assertThat(remindersListViewModel.showLoading.getOrAwaitValue()).isTrue
     }
 }
