@@ -43,11 +43,17 @@ Right click on the `test` or `androidTest` packages and select Run Tests
 
 Explain what each test does and why
 
+Android CI runs's now with unit tests, click on the ci image:
+[![Android CI](https://github.com/parzival-nieminen/android-location-reminder/actions/workflows/android.yml/badge.svg)](https://github.com/parzival-nieminen/android-location-reminder/actions/workflows/android.yml)
 ```
 1.androidTest
-        //TODO: Students explain their testing here.
+        Integration tests for RemindersActivity, ReminderListFragment, ReminderDao and RemindersLocalRepo
+        For testing behavoir between diff. components, views and fragment
+        For testing navigation and info interaction's
 2. test
-        //TODO: Students explain their testing here.
+        Fast unit test's for : ReminderListViewModel, SaveReminder.
+        For testing reminder save behavoir with an fakedatasource on viewmodel
+        
 ```
 
 ## Project Instructions
