@@ -37,6 +37,7 @@ class AuthenticationActivity : AppCompatActivity() {
             AuthUI.getInstance()
                 .createSignInIntentBuilder()
                 .setAvailableProviders(providers)
+                .setIsSmartLockEnabled(false)
                 .setTheme(R.style.FirebaseAuthTheme)
                 .build(), SIGN_IN_RESULT_CODE
         )
