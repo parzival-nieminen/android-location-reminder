@@ -90,22 +90,5 @@ class RemindersActivityTest :
 
         scenario.close()
     }
-
-    @Test
-    fun when_location_is_missing_in_reminder_then_show_missing_snackbar_info() {
-
-        val scenario = ActivityScenario.launch(RemindersActivity::class.java)
-        onView(withId(R.id.noDataTextView)).check(matches(isDisplayed()))
-        onView(withId(R.id.addReminderFAB)).perform(click())
-        onView(withId(R.id.reminderTitle)).perform(replaceText("Hello"))
-        onView(withId(R.id.reminderDescription)).perform(replaceText("World"))
-        onView(withId(R.id.saveReminder)).perform(click())
-
-        onView(withId(com.google.android.material.R.id.snackbar_text))
-            .check(matches(withText(R.string.err_select_location)))
-
-        scenario.close()
-    }
-
 }
 
